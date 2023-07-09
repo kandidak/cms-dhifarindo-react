@@ -83,14 +83,14 @@ export function Navbar({ brandName, routes, action }) {
 }
 
 Navbar.defaultProps = {
-  brandName: "Material Tailwind React",
+  brandName: "Dhifarindo Global",
   action: (
     <a
-      href="https://www.creative-tim.com/product/material-tailwind-dashboard-react"
+      href="https://www.dhifarindoglobal.com"
       target="_blank"
     >
       <Button variant="gradient" size="sm" fullWidth>
-        free download
+        Go to Website
       </Button>
     </a>
   ),

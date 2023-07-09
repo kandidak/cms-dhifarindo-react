@@ -1,3 +1,5 @@
+import React, {useMemo} from "react";
+import { Table, Button } from "@/components";
 import {
   Card,
   CardHeader,
@@ -12,6 +14,78 @@ import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { authorsTableData, projectsTableData } from "@/data";
 
 export function Tables() {
+
+  const columnsBrand = React.useMemo(
+    () => [
+      {
+        Header: 'No.',
+        accessor: 'no',
+      },
+      {
+        Header: "Brand",
+        accessor: "name",
+        Cell: ({ row }) => (
+          <>
+            <div className="flex gap-4 items-center">
+              {row.original.name}
+            </div>
+          </>
+        ),
+      },
+      {
+        Header: "Brand ID",
+        accessor: "id",
+      },
+
+      {
+        Header: "Email",
+        accessor: "email",
+      },
+      {
+        Header: "Status",
+        accessor: "status",
+        Cell: ({ value }) => (
+          <Button
+            className={`${value === "Active" ? "!bg-green-500" : "!bg-red-500"}`}
+          >
+            {value}
+          </Button>
+        ),
+      },
+    ],
+    []
+  );
+
+  const dataBrand = React.useMemo(
+    () => [
+      {
+        brand_name: "Hydro Coco",
+        brand_id: "Hydro_is_Coco",
+        email: "Hydrococo@gmail.com",
+        status: "Active",
+      },
+      {
+        brand_name: "Hydro Coco",
+        brand_id: "Hydro_is_Coco",
+        email: "Hydrococo@gmail.com",
+        status: "Active",
+      },
+      {
+        brand_name: "Hydro Coco",
+        brand_id: "Hydro_is_Coco",
+        email: "Hydrococo@gmail.com",
+        status: "Active",
+      },
+      {
+        brand_name: "Hydro Coco",
+        brand_id: "Hydro_is_Coco",
+        email: "Hydrococo@gmail.com",
+        status: "Inactive",
+      },
+    ],
+    []
+  );
+
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
@@ -214,6 +288,11 @@ export function Tables() {
           </table>
         </CardBody>
       </Card>
+      <Table
+          columns={columnsBrand}
+          data={dataBrand}
+          title={'Test'}
+        />
     </div>
   );
 }
