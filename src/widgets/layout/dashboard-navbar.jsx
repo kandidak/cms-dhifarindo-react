@@ -50,7 +50,7 @@ export function DashboardNavbar() {
               fixedNavbar ? "mt-1" : ""
             }`}
           >
-            <Link to={`/${layout}`}>
+            <Link to={`/home`}>
               <Typography
                 variant="small"
                 color="blue-gray"
