@@ -53,7 +53,8 @@ export function Navbar({ brandName, routes, action }) {
             {brandName}
           </Typography>
         </Link>
-        <div className="hidden lg:block">{navList}</div>
+        {/* <div className="hidden lg:block">{navList}</div> */}
+        Selamat Datang
         {React.cloneElement(action, {
           className: "hidden lg:inline-block",
         })}

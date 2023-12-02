@@ -29,18 +29,21 @@ import { platformSettingsData, conversationsData, projectsData } from "@/data";
 import axios from "@/axios";
 import bcrypt from "bcryptjs";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export function Users() {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [formUser, setFormUser] = useState({
+    user_name: "",
     name: "",
     password: "",
     role: "Super Admin",
     email: "",
     gender: "Male",
   });
-  const [id, setId] = useState('');
+  const [id, setId] = useState("");
 
   const dropdownRole = (
     <>
@@ -137,7 +140,7 @@ export function Users() {
   };
 
   const handleChange = (e) => {
-    console.log('e',e)
+    console.log("e", e);
     setFormUser({ ...formUser, [e.target.id]: e.target.value });
   };
 
@@ -175,101 +178,117 @@ export function Users() {
     }
   };
 
+  const dataStorage = localStorage.getItem("user");
+  const user = JSON.parse(dataStorage);
+
   useEffect(() => {
     fetchDataUser();
   }, []);
 
-  return (
-    <>
-      <div className="mt-12 mb-8 flex flex-col gap-12">
-        <div className="mr-5 flex justify-end">
-          <Button
-            className="flex items-center gap-2"
-            onClick={() => {
-              setFormUser({
-                name: "",
-                password: "",
-                role: "Super Admin",
-                email: "",
-                gender: "Male",
-              });
-              setOpenModal(true);
-            }}
-          >
-            <PlusIcon className="h-5 w-5" />
-            Add Users
-          </Button>
-          <Modal isOpen={openModal} onClose={closeModal} title="Add User">
-            <form onSubmit={handleSubmit}>
-              <div className="flex flex-col gap-2 p-5">
-                <Input
-                  name="name"
-                  label="User Name"
-                  placeholder="Input user name here"
-                  defaultValue={formUser.name}
-                  onChange={handleChange}
-                  required
-                />
-                <Input
-                  name="password"
-                  label="Password"
-                  placeholder="Input password here"
-                  defaultValue={formUser.password}
-                  onChange={handleChange}
-                  // required
-                />
-                <Select
-                  name="role"
-                  label="Role"
-                  defaultValue={formUser.role}
-                  // value={formUser.role}
-                  onChange={handleChange}
-                  dropdownContent={dropdownRole}
-                  required
-                />
-                <Input
-                  name="email"
-                  label="Email"
-                  placeholder="Input email here"
-                  type="email"
-                  defaultValue={formUser.email}
-                  onChange={handleChange}
-                  required
-                />
-                <Select
-                  name="gender"
-                  label="Gender"
-                  defaultValue={formUser.gender}
-                  onChange={handleChange}
-                  dropdownContent={dropdownGender}
-                  required
-                />
-              </div>
-              <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                <button
-                  type="submit"
-                  className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                >
-                  Submit
-                </button>
-                <button
-                  type="button"
-                  className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={() => {
-                    setOpenModal(false);
-                    setFormUser("");
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </Modal>
+  if (user) {
+    return (
+      <>
+        <div className="mt-12 mb-8 flex flex-col gap-12">
+          <div className="mr-5 flex justify-end">
+            <Button
+              className="flex items-center gap-2"
+              onClick={() => {
+                setFormUser({
+                  user_name: "",
+                  name: "",
+                  password: "",
+                  role: "Super Admin",
+                  email: "",
+                  gender: "Male",
+                });
+                setOpenModal(true);
+              }}
+            >
+              <PlusIcon className="h-5 w-5" />
+              Add Users
+            </Button>
+            <Modal isOpen={openModal} onClose={closeModal} title="Add User">
+              <form onSubmit={handleSubmit}>
+                <div className="flex flex-col gap-2 p-5">
+                  <Input
+                    name="user_name"
+                    label="User Name"
+                    placeholder="Input user name here"
+                    defaultValue={formUser.user_name}
+                    onChange={handleChange}
+                    required
+                  />
+                  <Input
+                    name="name"
+                    label="Name"
+                    placeholder="Input display name here"
+                    defaultValue={formUser.name}
+                    onChange={handleChange}
+                    required
+                  />
+                  <Input
+                    name="password"
+                    label="Password"
+                    placeholder="Input password here"
+                    defaultValue={formUser.password}
+                    onChange={handleChange}
+                    // required
+                  />
+                  <Select
+                    name="role"
+                    label="Role"
+                    defaultValue={formUser.role}
+                    // value={formUser.role}
+                    onChange={handleChange}
+                    dropdownContent={dropdownRole}
+                    required
+                  />
+                  <Input
+                    name="email"
+                    label="Email"
+                    placeholder="Input email here"
+                    type="email"
+                    defaultValue={formUser.email}
+                    onChange={handleChange}
+                    required
+                  />
+                  <Select
+                    name="gender"
+                    label="Gender"
+                    defaultValue={formUser.gender}
+                    onChange={handleChange}
+                    dropdownContent={dropdownGender}
+                    required
+                  />
+                </div>
+                <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                  <button
+                    type="submit"
+                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                  >
+                    Submit
+                  </button>
+                  <button
+                    type="button"
+                    className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                    onClick={() => {
+                      setOpenModal(false);
+                      setFormUser("");
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </Modal>
+          </div>
+          <Table columns={columns} data={data} title={"Users"} />
         </div>
-        <Table columns={columns} data={data} title={"Users"} />
-      </div>
-    </>
-  );
+      </>
+    );
+  } else {
+    navigate("/auth/sign-in");
+  }
 }
 
 export default Users;

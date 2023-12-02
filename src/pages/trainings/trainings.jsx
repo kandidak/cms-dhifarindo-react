@@ -27,10 +27,12 @@ import { Link } from "react-router-dom";
 import { ProfileInfoCard, MessageCard } from "@/widgets/cards";
 import { platformSettingsData, conversationsData, projectsData } from "@/data";
 import axios from "@/axios";
-import bcrypt from "bcryptjs";
 import { toast } from "react-toastify";
+import { data } from "autoprefixer";
+import { useNavigate } from "react-router-dom";
 
 export function Trainings() {
+  const navigate = useNavigate();
   const [idTitle, setIdTitle] = useState("");
   const [dataTitle, setDataTitle] = useState([]);
   const [openModalTitle, setOpenModalTitle] = useState(false);
@@ -52,15 +54,15 @@ export function Trainings() {
   const [mode, setMode] = useState("");
   const [category, setCategory] = useState("");
   const [selectedFile, setSelectedFile] = useState({
-    file: '',
-    name: '',
+    file: "",
+    name: "",
   });
 
   const handleFileSelect = (file) => {
-    console.log('file',file)
+    console.log("file", file);
     setSelectedFile({
       file: file,
-      name: file.name
+      name: file.name,
     });
   };
 
@@ -97,8 +99,8 @@ export function Trainings() {
               onClick={() => {
                 setFormTitle(row.original);
                 setSelectedFile({
-                  name: row.original.images
-                })
+                  name: row.original.images,
+                });
                 setMode("Edit");
                 setOpenModalTitle(true);
                 setId(row.original.id);
@@ -273,7 +275,7 @@ export function Trainings() {
       const payload = {
         ...formTitle,
         [e.target.id]: e.target.value,
-        images: selectedFile?.name.replace(/ /g, '-'),
+        images: selectedFile?.name.replace(/ /g, "-"),
       };
       if (id) {
         await axios.patch(`/main-titles/${id}`, payload).then((res) => {
@@ -449,6 +451,9 @@ export function Trainings() {
     }
   };
 
+  const dataStorage = localStorage.getItem("user");
+  const user = JSON.parse(dataStorage);
+
   useEffect(() => {
     fetchDataTitle();
   }, []);
@@ -458,234 +463,245 @@ export function Trainings() {
     fetchDataTujuan(idTitle);
   }, [idTitle]);
 
-  return (
-    <>
-      <div className="mt-12 mb-8 flex flex-col gap-12">
-        <div className="mr-5 flex justify-end">
-          <Button
-            className="flex items-center gap-2"
-            onClick={() => {
-              setFormTitle({
-                title: "",
-              });
-              setOpenModalTitle(true);
-              setMode("Add");
-              setId(null);
-            }}
-          >
-            <PlusIcon className="h-5 w-5" />
-            Add Title
-          </Button>
-        </div>
-        <Table columns={columnsTitle} data={dataTitle} title={"Title"} />
-
-        <div className="rounded-xl border border-2 bg-white p-6">
-          <Select
-            name="title"
-            label="Select Title"
-            defaultValue={idTitle}
-            // value={formUser.role}
-            onChange={(e) => setIdTitle(e.target.value)}
-            dropdownContent={dropdownTitle}
-          />
-        </div>
-
-        <div className="mr-5 flex items-center justify-end">
-          <Button
-            className="flex items-center gap-2"
-            onClick={() => {
-              setFormContent({
-                listMateri: "",
-              });
-              setOpenModalContent(true);
-              setMode("Add");
-              setId(null);
-            }}
-          >
-            <PlusIcon className="h-5 w-5" />
-            Add Content
-          </Button>
-        </div>
-        <Table columns={columnsContent} data={dataContent} title={"Content"} />
-
-        <div className="mr-5 flex items-center justify-end">
-          <Button
-            className="flex items-center gap-2"
-            onClick={() => {
-              setFormTujuan({
-                listTujuan: "",
-              });
-              setOpenModalTujuan(true);
-              setMode("Add");
-              setId(null);
-            }}
-          >
-            <PlusIcon className="h-5 w-5" />
-            Add Tujuan
-          </Button>
-        </div>
-        <Table columns={columnsTujuan} data={dataTujuan} title={"Tujuan"} />
-      </div>
-
-      <Modal
-        isOpen={openModalTitle}
-        onClose={closeModalTitle}
-        title={`${mode} Title`}
-      >
-        <form onSubmit={handleSubmitTitle}>
-          <div className="flex flex-col gap-5 p-5">
-            <div className="flex flex-col gap-2">
-              <Input
-                name="title"
-                label="Title"
-                placeholder="Input title here"
-                defaultValue={formTitle.title}
-                onChange={handleChangeTitle}
-                required
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label>Upload File PDF</label>
-              <FileUploader onFileSelect={handleFileSelect} currentFile={selectedFile.name} />
-            </div>
-          </div>
-          <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <button
-              type="submit"
-              className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-            >
-              Submit
-            </button>
-            <button
-              type="button"
-              className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+  if (user) {
+    return (
+      <>
+        <div className="mt-12 mb-8 flex flex-col gap-12">
+          <div className="mr-5 flex justify-end">
+            <Button
+              className="flex items-center gap-2"
               onClick={() => {
-                setOpenModalTitle(false);
                 setFormTitle({
                   title: "",
                 });
+                setOpenModalTitle(true);
+                setMode("Add");
+                setId(null);
               }}
             >
-              Cancel
-            </button>
+              <PlusIcon className="h-5 w-5" />
+              Add Title
+            </Button>
           </div>
-        </form>
-      </Modal>
+          <Table columns={columnsTitle} data={dataTitle} title={"Title"} />
 
-      <Modal
-        isOpen={openModalContent}
-        onClose={closeModalContent}
-        title={`${mode} Content`}
-      >
-        <form onSubmit={handleSubmitContent}>
-          <div className="flex flex-col gap-2 p-5">
-            <Input
-              name="listMateri"
-              label="Content"
-              placeholder="Input Content here"
-              defaultValue={formContent.listMateri}
-              onChange={handleChangeContent}
-              required
+          <div className="rounded-xl border border-2 bg-white p-6">
+            <Select
+              name="title"
+              label="Select Title"
+              defaultValue={idTitle}
+              // value={formUser.role}
+              onChange={(e) => setIdTitle(e.target.value)}
+              dropdownContent={dropdownTitle}
             />
           </div>
-          <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <button
-              type="submit"
-              className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-            >
-              Submit
-            </button>
-            <button
-              type="button"
-              className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+
+          <div className="mr-5 flex items-center justify-end">
+            <Button
+              className="flex items-center gap-2"
               onClick={() => {
-                setOpenModalContent(false);
                 setFormContent({
                   listMateri: "",
                 });
+                setOpenModalContent(true);
+                setMode("Add");
+                setId(null);
               }}
             >
-              Cancel
-            </button>
+              <PlusIcon className="h-5 w-5" />
+              Add Content
+            </Button>
           </div>
-        </form>
-      </Modal>
+          <Table
+            columns={columnsContent}
+            data={dataContent}
+            title={"Content"}
+          />
 
-      <Modal
-        isOpen={openModalTujuan}
-        onClose={closeModalTujuan}
-        title={`${mode} Tujuan`}
-      >
-        <form onSubmit={handleSubmitTujuan}>
+          <div className="mr-5 flex items-center justify-end">
+            <Button
+              className="flex items-center gap-2"
+              onClick={() => {
+                setFormTujuan({
+                  listTujuan: "",
+                });
+                setOpenModalTujuan(true);
+                setMode("Add");
+                setId(null);
+              }}
+            >
+              <PlusIcon className="h-5 w-5" />
+              Add Tujuan
+            </Button>
+          </div>
+          <Table columns={columnsTujuan} data={dataTujuan} title={"Tujuan"} />
+        </div>
+
+        <Modal
+          isOpen={openModalTitle}
+          onClose={closeModalTitle}
+          title={`${mode} Title`}
+        >
+          <form onSubmit={handleSubmitTitle}>
+            <div className="flex flex-col gap-5 p-5">
+              <div className="flex flex-col gap-2">
+                <Input
+                  name="title"
+                  label="Title"
+                  placeholder="Input title here"
+                  defaultValue={formTitle.title}
+                  onChange={handleChangeTitle}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label>Upload File PDF</label>
+                <FileUploader
+                  onFileSelect={handleFileSelect}
+                  currentFile={selectedFile.name}
+                />
+              </div>
+            </div>
+            <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+              <button
+                type="submit"
+                className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+              >
+                Submit
+              </button>
+              <button
+                type="button"
+                className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                onClick={() => {
+                  setOpenModalTitle(false);
+                  setFormTitle({
+                    title: "",
+                  });
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </Modal>
+
+        <Modal
+          isOpen={openModalContent}
+          onClose={closeModalContent}
+          title={`${mode} Content`}
+        >
+          <form onSubmit={handleSubmitContent}>
+            <div className="flex flex-col gap-2 p-5">
+              <Input
+                name="listMateri"
+                label="Content"
+                placeholder="Input Content here"
+                defaultValue={formContent.listMateri}
+                onChange={handleChangeContent}
+                required
+              />
+            </div>
+            <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+              <button
+                type="submit"
+                className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+              >
+                Submit
+              </button>
+              <button
+                type="button"
+                className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                onClick={() => {
+                  setOpenModalContent(false);
+                  setFormContent({
+                    listMateri: "",
+                  });
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </Modal>
+
+        <Modal
+          isOpen={openModalTujuan}
+          onClose={closeModalTujuan}
+          title={`${mode} Tujuan`}
+        >
+          <form onSubmit={handleSubmitTujuan}>
+            <div className="flex flex-col gap-2 p-5">
+              <Input
+                name="listTujuan"
+                label="Tujuan"
+                placeholder="Input Tujuan here"
+                defaultValue={formTujuan.listTujuan}
+                onChange={handleChangeTujuan}
+                required
+              />
+            </div>
+            <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+              <button
+                type="submit"
+                className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+              >
+                Submit
+              </button>
+              <button
+                type="button"
+                className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                onClick={() => {
+                  setOpenModalTujuan(false);
+                  setFormTujuan({
+                    listTujuan: "",
+                  });
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </Modal>
+
+        <Modal
+          isOpen={openDeleteModal}
+          onClose={closeDeleteModal}
+          title={`Delete ${category}`}
+        >
           <div className="flex flex-col gap-2 p-5">
-            <Input
-              name="listTujuan"
-              label="Tujuan"
-              placeholder="Input Tujuan here"
-              defaultValue={formTujuan.listTujuan}
-              onChange={handleChangeTujuan}
-              required
-            />
+            Are you sure want to delete this {category}?
           </div>
           <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
             <button
-              type="submit"
-              className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+              type="button"
+              className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+              onClick={() => {
+                category == "Title"
+                  ? deleteTitle()
+                  : category == "Content"
+                  ? deleteContent()
+                  : deleteTujuan();
+              }}
             >
-              Submit
+              Yes
             </button>
             <button
               type="button"
               className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
               onClick={() => {
-                setOpenModalTujuan(false);
-                setFormTujuan({
-                  listTujuan: "",
-                });
+                setOpenDeleteModal(false);
+                setId("");
               }}
             >
-              Cancel
+              No
             </button>
           </div>
-        </form>
-      </Modal>
-
-      <Modal
-        isOpen={openDeleteModal}
-        onClose={closeDeleteModal}
-        title={`Delete ${category}`}
-      >
-        <div className="flex flex-col gap-2 p-5">
-          Are you sure want to delete this {category}?
-        </div>
-        <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-          <button
-            type="button"
-            className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-            onClick={() => {
-              category == "Title"
-                ? deleteTitle()
-                : category == "Content"
-                ? deleteContent()
-                : deleteTujuan();
-            }}
-          >
-            Yes
-          </button>
-          <button
-            type="button"
-            className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-            onClick={() => {
-              setOpenDeleteModal(false);
-              setId("");
-            }}
-          >
-            No
-          </button>
-        </div>
-      </Modal>
-    </>
-  );
+        </Modal>
+      </>
+    );
+  } else {
+    navigate("/auth/sign-in");
+  }
 }
 
 export default Trainings;

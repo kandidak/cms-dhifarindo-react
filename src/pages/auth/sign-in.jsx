@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -9,8 +10,38 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import { toast } from "react-toastify";
+import axios from "@/axios";
 
 export function SignIn() {
+  const navigate = useNavigate();
+  const [formLogin, setFormLogin] = useState({
+    username: "",
+    password: "",
+  });
+
+  const handleChange = async (e) => {
+    setFormLogin({ ...formLogin, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        ...formLogin,
+      };
+
+      let { data } = await axios.post(`auth/login`, payload);
+      console.log("data", data);
+      if (data.status === 200) {
+        toast.success(data.message, { theme: "colored" });
+        localStorage.setItem("user", JSON.stringify(data?.data));
+        navigate("/dashboard/users");
+      }
+    } catch (error) {
+      toast.error(error, { theme: "colored" });
+    }
+  };
   return (
     <>
       <img
@@ -29,18 +60,31 @@ export function SignIn() {
               Sign In
             </Typography>
           </CardHeader>
-          <CardBody className="flex flex-col gap-4">
-            <Input type="email" label="Email" size="lg" />
-            <Input type="password" label="Password" size="lg" />
-            <div className="-ml-2.5">
+          <form onSubmit={handleSubmit}>
+            <CardBody className="flex flex-col gap-4">
+              <Input
+                id="username"
+                type="text"
+                label="Username"
+                size="lg"
+                onChange={handleChange}
+              />
+              <Input
+                id="password"
+                type="password"
+                label="Password"
+                size="lg"
+                onChange={handleChange}
+              />
+              {/* <div className="-ml-2.5">
               <Checkbox label="Remember Me" />
-            </div>
-          </CardBody>
-          <CardFooter className="pt-0">
-            <Button variant="gradient" fullWidth>
-              Sign In
-            </Button>
-            <Typography variant="small" className="mt-6 flex justify-center">
+            </div> */}
+            </CardBody>
+            <CardFooter className="pt-0">
+              <Button variant="gradient" fullWidth type="submit">
+                Sign In
+              </Button>
+              {/* <Typography variant="small" className="mt-6 flex justify-center">
               Don't have an account?
               <Link to="/auth/sign-up">
                 <Typography
@@ -52,8 +96,9 @@ export function SignIn() {
                   Sign up
                 </Typography>
               </Link>
-            </Typography>
-          </CardFooter>
+            </Typography> */}
+            </CardFooter>
+          </form>
         </Card>
       </div>
     </>
