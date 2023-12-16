@@ -1,5 +1,5 @@
-import Axios from 'axios';
-import _ from 'lodash';
+import Axios from "axios";
+import _ from "lodash";
 
 // const instance = axios.create({
 //     baseURL : 'http:localhost:8800',
@@ -12,27 +12,34 @@ import _ from 'lodash';
 // axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 export const baseURLStaging = 'http://localhost:5000/';
+// export const baseURLStaging = "https://api.dhifarindoglobal.com/";
 
 const axios = Axios.create({
-    baseURL: baseURLStaging,
+  baseURL: baseURLStaging,
 });
 
-axios.interceptors.request.use(request => {
+axios.interceptors.request.use(
+  (request) => {
     console.log(request);
     // Edit request config
     return request;
-}, error => {
+  },
+  (error) => {
     console.log(error);
     return Promise.reject(error);
-});
+  }
+);
 
-axios.interceptors.response.use(response => {
+axios.interceptors.response.use(
+  (response) => {
     console.log(response);
     // Edit response config
     return response;
-}, error => {
+  },
+  (error) => {
     console.log(error);
     return Promise.reject(error);
-});
+  }
+);
 
 export default axios;

@@ -5,6 +5,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
+  const dataStorage = localStorage.getItem("user");
+  const user = JSON.parse(dataStorage);
   return (
     <>
       <LoadingOverlay />
@@ -12,7 +14,7 @@ function App() {
       <Routes>
         <Route path="/dashboard/*" element={<Dashboard />} />
         <Route path="/auth/*" element={<Auth />} />
-        <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
+        <Route path="*" element={<Navigate to={user ? `/dashboard/home` : `/auth/sign-in`} replace />} />
       </Routes>
     </>
   );

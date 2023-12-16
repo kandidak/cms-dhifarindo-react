@@ -39,7 +39,8 @@ export function SignIn() {
         navigate("/dashboard/users");
       }
     } catch (error) {
-      toast.error(error, { theme: "colored" });
+      console.log('error', error)
+      toast.error(error.response.data.error, { theme: "colored" });
     }
   };
   return (
