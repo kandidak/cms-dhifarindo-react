@@ -11,8 +11,8 @@ import _ from "lodash";
 // axios.defaults.headers.common['Authorization'] = 'AUTH TOKEN';
 // axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-export const baseURLStaging = 'http://localhost:5000/';
-// export const baseURLStaging = "https://api.dhifarindoglobal.com/";
+// export const baseURLStaging = 'http://localhost:5000/';
+export const baseURLStaging = "https://api.dhifarindoglobal.com/";
 
 const axios = Axios.create({
   baseURL: baseURLStaging,
