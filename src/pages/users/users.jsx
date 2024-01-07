@@ -98,7 +98,7 @@ export function Users() {
             </Button>
             <Button
               className="bg-red-500"
-              onClick={() => console.log("id", value)}
+              onClick={() => handleDelete(row.original.id)}
             >
               <TrashIcon className="h-5 w-5" />
             </Button>
@@ -144,6 +144,21 @@ export function Users() {
     setFormUser({ ...formUser, [e.target.id]: e.target.value });
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`/users/${id}`).then((res) => {
+        toast.success(res.data.msg, {
+          theme: "colored",
+        });
+        fetchDataUser();
+      });
+    } catch (err) {
+      toast.error(err, {
+        theme: "colored",
+      });
+    }
+  };
+
   const closeModal = () => {
     setOpenModal(false);
   };
@@ -160,6 +175,7 @@ export function Users() {
           toast.success(`${res.data.msg}`, {
             theme: "colored",
           });
+          setId("");
           setOpenModal(false);
           fetchDataUser();
         });
@@ -168,6 +184,7 @@ export function Users() {
           toast.success(`${res.data.msg}`, {
             theme: "colored",
           });
+          setOpenModal(false);
           fetchDataUser();
         });
       }

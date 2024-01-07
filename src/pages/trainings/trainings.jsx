@@ -282,6 +282,7 @@ export function Trainings() {
           toast.success(`${res.data.msg}`, {
             theme: "colored",
           });
+          setId("");
           setOpenModalTitle(false);
           fetchDataTitle();
         });
@@ -357,6 +358,7 @@ export function Trainings() {
           toast.success(`${res.data.msg}`, {
             theme: "colored",
           });
+          setId("");
           setOpenModalContent(false);
           fetchDataContent(idTitle);
         });
@@ -432,6 +434,7 @@ export function Trainings() {
           toast.success(`${res.data.msg}`, {
             theme: "colored",
           });
+          setId("");
           setOpenModalTujuan(false);
           fetchDataTujuan(idTitle);
         });
